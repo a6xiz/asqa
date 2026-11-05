@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src https: http: wss: ws:; media-src 'self' blob: mediastream:; img-src 'self' data:">
+<title>SyncWatch</title>
+<style>
+:root{--bg:#f4f4f5;--bar:#e4e4e7;--fg:#18181b;--mut:#6b7280;--card:#fff;--bd:#d4d4d8;--acc:#2563eb;--ok:#16a34a;--wait:#d97706;--bad:#dc2626;--off:#9ca3af}
+@media (prefers-color-scheme:dark){:root{--bg:#111114;--bar:#1c1c21;--fg:#f4f4f5;--mut:#a1a1aa;--card:#1c1c21;--bd:#3f3f46;--acc:#3b82f6;--ok:#4ade80;--wait:#fbbf24;--bad:#f87171;--off:#71717a}}
+[hidden]{display:none!important}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{font:14px/1.4 system-ui,"Segoe UI",sans-serif;background:var(--bg);color:var(--fg);overflow:hidden}
+#bar{position:fixed;inset:0 0 auto 0;height:52px;display:flex;gap:6px;align-items:center;padding:0 8px;background:var(--bar);border-bottom:1px solid var(--bd);z-index:5}
+button,input,select{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:6px 10px}
+button{cursor:pointer;white-space:nowrap}button:hover:not(:disabled){border-color:var(--acc)}button:disabled{opacity:.4;cursor:default}
+#addr{flex:1;min-width:80px}
+#status{display:flex;align-items:center;gap:6px;white-space:nowrap;color:var(--mut);padding:0 6px;max-width:30vw;overflow:hidden;text-overflow:ellipsis}
+#dot{width:10px;height:10px;border-radius:50%;background:var(--off);flex:none}
+#dot.ok{background:var(--ok)}#dot.wait{background:var(--wait)}#dot.bad{background:var(--bad)}
+#voice.on,#link.on{border-color:var(--ok);color:var(--ok)}
+.panel{position:fixed;inset:52px 0 0 0;display:flex;align-items:center;justify-content:center;background:var(--bg);overflow:auto}
+.panel.hidden{display:none}
+.card{width:min(460px,92vw);background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:22px}
+h1{margin:0 0 4px;font-size:22px}.sub{color:var(--mut);margin:0 0 14px}
+label{display:block;margin:10px 0 4px;color:var(--mut);font-size:12px}
+.card input,.card select{width:100%}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 8px}
+.big{padding:14px 8px;font-weight:600;display:flex;flex-direction:column;gap:2px;align-items:center}
+.big small{font-weight:400;color:var(--mut)}.big.main{border-color:var(--acc)}
+details{margin-top:8px;color:var(--mut)}details input{margin-top:6px}
+#msg,#audMsg{min-height:20px;margin:10px 0 0;color:var(--wait)}
+.row{display:flex;gap:8px;margin-top:10px;justify-content:space-between}
+#meterWrap{height:10px;background:var(--bar);border-radius:6px;overflow:hidden;margin-top:6px}
+#meter{height:100%;width:0;background:var(--ok);transition:width .06s}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#000c;color:#fff;padding:8px 14px;border-radius:8px;display:none;z-index:9;max-width:80vw}
+</style><link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+<div id="bar">
+  <button id="back" title="Back" disabled>&#9664;</button>
+  <button id="fwd" title="Forward" disabled>&#9654;</button>
+  <button id="reload" title="Reload">&#8635;</button>
+  <button id="home">Home</button>
+  <input id="addr" placeholder="Address" spellcheck="false">
+  <div id="status"><span id="dot"></span><span id="stxt">Not connected</span></div>
+  <button id="link" class="on" title="When on, changing the page (like choosing another episode) opens the same page for your friend">Link: on</button>
+  <button id="voice" title="Talk to your friend">Voice: off</button>
+  <button id="mute" hidden>Mute</button>
+  <button id="audio" title="Choose microphone and speakers">Audio</button>
+  <button id="conn">Connection</button>
+</div>
+
+<div id="lobby" class="panel">
+  <div class="card">
+    <h1>SyncWatch</h1>
+    <p class="sub">The Main person clicks first. The Second person clicks after.</p>
+    <label for="server">Server address</label>
+    <input id="server" placeholder="https://sync.yourname.workers.dev" spellcheck="false">
+    <label for="token">Password</label>
+    <input id="token" type="password" autocomplete="off">
+    <div class="roles">
+      <button id="btnMain" class="big main">I'm Main<small>starts the room</small></button>
+      <button id="btnSecond" class="big">I'm Second<small>joins Main's room</small></button>
+    </div>
+    <details><summary>Manual room (overrides automatic)</summary>
+      <input id="room" placeholder="Room 1-15, leave empty for automatic" spellcheck="false">
+    </details>
+    <p id="msg"></p>
+    <div class="row"><button id="cancel" hidden>Disconnect</button><button id="skip">Browse without connecting</button></div>
+  </div>
+</div>
+
+<div id="audioPanel" class="panel hidden">
+  <div class="card">
+    <h1>Audio</h1>
+    <p class="sub">Pick the microphone and speakers for voice chat.</p>
+    <label for="micSel">Microphone</label>
+    <select id="micSel"></select>
+    <div id="meterWrap"><div id="meter"></div></div>
+    <label for="spkSel">Speakers / headphones</label>
+    <select id="spkSel"></select>
+    <p id="audMsg"></p>
+    <div class="row"><span class="sub" style="margin:0">Speak: the green bar should move.</span><button id="audDone">Done</button></div>
+  </div>
+</div>
+
+<audio id="remoteAudio" autoplay></audio>
+<div id="toast"></div>
+<script src="shim.js"></script>
+<script src="ui.js"></script>
+<script src="shim-after.js"></script>
+</body></html>

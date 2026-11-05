@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+<title>Chat</title>
+<style>
+:root{--card:#ffffff;--fg:#18181b;--mut:#6b7280;--bd:#d4d4d8;--acc:#2563eb;--me:#2563eb;--meft:#fff;--fr:#e4e4e7;--ok:#16a34a;--off:#9ca3af}
+@media (prefers-color-scheme:dark){:root{--card:#1c1c21;--fg:#f4f4f5;--mut:#a1a1aa;--bd:#3f3f46;--acc:#3b82f6;--me:#3b82f6;--fr:#2e2e35;--ok:#4ade80;--off:#71717a}}
+[hidden]{display:none!important}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:transparent;overflow:hidden;font:14px/1.4 system-ui,"Segoe UI",sans-serif;color:var(--fg)}
+button,textarea{font:inherit;color:var(--fg)}
+#bubble{position:absolute;right:4px;bottom:4px;width:56px;height:56px;border-radius:50%;border:0;background:var(--acc);color:#fff;cursor:pointer;box-shadow:0 4px 14px #0006;display:flex;align-items:center;justify-content:center}
+#bubble svg{width:28px;height:28px;fill:#fff}
+#bubble.shake{animation:sh .5s}@keyframes sh{20%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}80%{transform:rotate(-6deg)}}
+#badge{position:absolute;top:-2px;right:-2px;min-width:20px;height:20px;border-radius:10px;background:#dc2626;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px}
+#panel{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--bd);border-radius:14px;overflow:hidden;box-shadow:0 8px 28px #0007}
+header{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--bd)}
+header b{flex:1}#dot{width:9px;height:9px;border-radius:50%;background:var(--off)}#dot.on{background:var(--ok)}
+header button{background:none;border:1px solid var(--bd);border-radius:6px;padding:2px 8px;cursor:pointer}
+#list{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:6px}
+.day{align-self:center;color:var(--mut);font-size:11px;margin:6px 0}
+.row{display:flex;flex-direction:column;max-width:82%}.row.me{align-self:flex-end;align-items:flex-end}.row.fr{align-self:flex-start}
+.b{padding:7px 11px;border-radius:16px;white-space:pre-wrap;word-break:break-word}
+.me .b{background:var(--me);color:var(--meft);border-bottom-right-radius:4px}.fr .b{background:var(--fr);border-bottom-left-radius:4px}
+.meta{font-size:11px;color:var(--mut);margin:1px 6px}
+.sys{align-self:center;color:var(--mut);font-size:12px}
+footer{display:flex;gap:6px;padding:8px;border-top:1px solid var(--bd)}
+#inp{flex:1;resize:none;max-height:90px;border:1px solid var(--bd);border-radius:10px;padding:7px 10px;background:transparent}
+#send{border:0;background:var(--acc);color:#fff;border-radius:10px;padding:0 14px;cursor:pointer}
+</style></head><body>
+<button id="bubble" title="Chat"><svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg><span id="badge" hidden>0</span></button>
+<section id="panel" hidden>
+  <header><span id="dot"></span><b id="title">Chat</b><button id="clear" title="Delete the chat history on this device">Clear</button><button id="close" title="Close">&#10005;</button></header>
+  <div id="list"></div>
+  <footer><textarea id="inp" rows="1" placeholder="Message" maxlength="1000"></textarea><button id="send">Send</button></footer>
+</section>
+<script src="shim.js"></script>
+<script src="chat.js"></script>
+</body></html>

@@ -1,0 +1,12 @@
+/* Phone layout: the toolbar becomes one swipeable row, the most useful buttons first. */
+@media (max-width: 760px) {
+  #bar { overflow-x: auto; gap: 4px; padding: 0 6px; scrollbar-width: none; }
+  #bar::-webkit-scrollbar { display: none; }
+  #bar > * { flex: none; }
+  #conn { order: 1; } #status { order: 2; max-width: none; } #link { order: 3; } #voice { order: 4; } #mute { order: 5; }
+  #audio { order: 6; } #back { order: 7; } #fwd { order: 8; } #reload { order: 9; } #home { order: 10; }
+  #addr { order: 11; flex: none; width: 220px; min-width: 220px; }
+  button { padding: 6px 9px; }
+  .card { padding: 16px; width: 94vw; }
+  .roles { gap: 8px; }
+}

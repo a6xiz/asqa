@@ -1,0 +1,40 @@
+SyncWatch for Android - build it online (free, about 15 minutes the first time)
+
+WHAT YOU NEED
+  - A free GitHub account (github.com > Sign up).
+  - This folder, unzipped.
+
+STEP 1  Make a repository
+  1. On github.com click the "+" (top right) > New repository.
+  2. Name it  syncwatch-android . Choose Private (fine) . Click "Create repository".
+
+STEP 2  Upload the files
+  1. On the new empty repository page click the link "uploading an existing file".
+  2. Open the unzipped folder on your PC, press Ctrl+A to select EVERYTHING inside it
+     (folders and files, including the one named .github), and drag it onto the GitHub page.
+  3. Wait until the upload finishes, then click "Commit changes".
+
+STEP 3  Get the APK
+  1. Click the "Actions" tab. A run called "Build APK" starts by itself (yellow dot).
+     If the Actions tab shows no workflow:  Add file > Create new file, type
+     .github/workflows/build.yml  as the name, paste the text from the file build-workflow.yml, and Commit.
+  2. Wait 4 to 8 minutes until the dot is a green check.
+  3. Click the run > scroll to "Artifacts" at the bottom > click "SyncWatch-apk" to download a zip.
+  4. Unzip it. Inside is  app-debug.apk . That is the app.
+
+STEP 4  Install on the phone (Android 8 or newer)
+  1. Send app-debug.apk to the phone (Telegram, Google Drive, USB cable...).
+  2. Open it. Android asks to allow "Install unknown apps" for the app you opened it from: allow it.
+  3. If Play Protect warns: More details > Install anyway. (It says this for every app not from the store.)
+  4. Open SyncWatch. Allow the microphone when it asks (needed for voice).
+
+IF THE BUILD TURNS RED
+  Open the failed run, click the red step, copy the last 30 lines of the log and send them to me.
+  I will send you the fixed file(s). Upload them to the repository (Add file > Upload files), and it builds again.
+
+USING THE APP
+  It works exactly like the Windows app: same server address and password, "I'm Main" / "I'm Second",
+  Link button, Voice, Audio (microphone), and the chat bubble. A phone and a PC can watch together.
+  - Swipe the top bar sideways to see all buttons.
+  - Rotating the phone or tapping fullscreen in the video works. The Back button closes panels, then goes back a page.
+  - Keep the app open on screen while you watch. If Android puts it in the background, voice and sync can pause.
